@@ -2,10 +2,14 @@
 import AddNew from "@/components/AddNew";
 import { createArticles, getCategory } from "@/utils/actions/articleActions";
 import { useEffect, useState } from "react";
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+});
 import "react-quill/dist/quill.snow.css";
-import ReactQuill from "react-quill";
+
 import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
+import dynamic from "next/dynamic";
 const CreateNewArticle = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -39,7 +43,7 @@ const CreateNewArticle = () => {
     // setContent("");
     console.log(formData);
     try {
-      const res = await createArticles(title,content,categoryValue);
+      const res = await createArticles(title, content, categoryValue);
       if (res.status === 201) {
         router.push("/articles");
       } else {
@@ -100,11 +104,9 @@ const CreateNewArticle = () => {
             <label className="font-[500]">Content</label>
             <div className="w-full">
               <ReactQuill value={content} onChange={setContent} />
-              {/* <Editor data={content} onChange={(data) => setContent(data)} /> */}
             </div>
           </div>
 
-          {/* <Editor editorState={content} onChange={setContent} /> */}
           <button type="submit" className="black_btn">
             Create Now
           </button>
