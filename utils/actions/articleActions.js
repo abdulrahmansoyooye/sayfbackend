@@ -76,13 +76,13 @@ export const DeleteArticle = async (id) => {
   }
 };
 
-export const createArticles = async (data) => {
+export const createArticles = async (title, content, categoryValue) => {
   await connectToDb();
-  const { title, content, categoryValue } = data;
   try {
     const foundCategory = await Category.findOne({ name: categoryValue });
+    console.log(categoryValue);
     if (!foundCategory) {
-      return res.status(404).json({ message: "Add a category to continue" });
+      return { message: "Add a category to continue" };
     }
     const article = await Articles.create({ title, content });
     foundCategory.articles.push(article);

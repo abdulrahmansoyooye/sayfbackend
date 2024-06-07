@@ -32,22 +32,21 @@ const CreateNewArticle = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("categoryValue", categoryValue);
+    // e.preventDefault();
+    // const formData = new FormData();
+    // formData.append("image", image);
+    // formData.append("title", title);
+    // formData.append("content", content);
+    // formData.append("categoryValue", categoryValue);
 
-    // setTitle("");
-    // setContent("");
-    console.log(formData);
+    setTitle("");
+    setContent("");
     try {
       const res = await createArticles(title, content, categoryValue);
       if (res.status === 201) {
         router.push("/articles");
       } else {
-        setMessage(await res.json().message);
+        setMessage(res.message);
       }
     } catch (error) {
       setMessage(error.message);
@@ -55,7 +54,7 @@ const CreateNewArticle = () => {
   };
   return (
     <div className="p-[2rem] w-[50%] max-lg:w-full m-auto serif">
-      <form onSubmit={handleSubmit}>
+      <form action={handleSubmit}>
         {" "}
         <div className="text-[1.5rem] text-center mb-[1rem] text-gradient">
           Create Article
