@@ -1,11 +1,12 @@
-import { mongoose, models } from "mongoose";
+import mongoose, { models } from "mongoose";
 import { Schema } from "mongoose";
 
-export const ArticleSchema = new Schema(
+const ArticleSchema = new Schema(
   {
-    title: String,
-    content: String,
-    imageUrl: String,
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+
+    category: { type: String, required: true },
   },
   {
     timestamps: true,
@@ -13,4 +14,4 @@ export const ArticleSchema = new Schema(
 );
 
 export const Articles =
-  models.Articles || mongoose.model("Articles", ArticleSchema);
+  models.Articles || mongoose.model("Article", ArticleSchema);

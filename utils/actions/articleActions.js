@@ -1,70 +1,59 @@
 "use server";
+
 import { Articles } from "@/models/articles";
 import { connectToDb } from "../database";
-import { Category } from "@/models/categories";
-export const getArticles = async (name) => {
+
+export const getArticles = async (category) => {
   console.log("fetching Articles");
   await connectToDb();
   try {
-    if (name == "All") {
-      const articles = await Articles.find({});
-
-      return JSON.parse(JSON.stringify(articles.reverse()));
+    if (category == "All") {
+      const res = await Articles.find({});
+      return JSON.parse(JSON.stringify(res.reverse()));
     } else {
-      const foundCategory = await Category.findOne({ name });
+      const foundCategory = await Podcasts.find({ category });
       if (!foundCategory) {
         return {
-          message: `"${name}" wasn't found`,
+          message: `"${category}" wasn't found`,
           status: 404,
         };
       }
-
-      return JSON.parse(JSON.stringify(foundCategory.articles.reverse()));
+      return JSON.parse(JSON.stringify(foundCategory));
     }
   } catch (error) {
     console.log(error);
   }
 };
 export const getEachArticle = async (id) => {
-  console.log("fetching this article");
+  console.log("fetching this Article");
   await connectToDb();
   try {
-    const articles = await Articles.findById(id);
+    const podcast = await Articles.findById(id);
 
-    return JSON.parse(JSON.stringify(articles));
+    const response = JSON.parse(JSON.stringify(podcast));
+    return response;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const EditArticle = async (articleId, title, content, categoryValue) => {
-  console.log("Editing this article");
+export const EditArticle = async (articleId, content, tag) => {
+  console.log("Editing this podcast");
   await connectToDb();
-
   try {
-    const foundCategory = await Category.findOne({ name: categoryValue });
-    if (!foundCategory) {
-      return { message: "Add a category to continue" };
-    }
-    const newArticle = await Articles.findByIdAndUpdate(articleId, {
+    await Articles.findByIdAndUpdate(articleId, {
       title,
       content,
     });
-    foundCategory.articles.forEach((article, index) => {
-      const articleid = article._id.toString();
-      if (articleid === articleId) {
-        article = newArticle;
-      }
-    });
 
-    return { message: "Article Edited Succesfully", status: 201 };
+    return { message: "Article has Edited", status: 201 };
   } catch (error) {
     console.log(error);
   }
 };
 
 export const DeleteArticle = async (id) => {
-  console.log("Deleting this article");
+  console.log("Deleting this podcast");
   await connectToDb();
   try {
     const article = await Articles.findByIdAndDelete(id);
@@ -76,38 +65,21 @@ export const DeleteArticle = async (id) => {
   }
 };
 
-export const createArticles = async (title, content, categoryValue) => {
+export const createArticle = async (title, content, category) => {
   await connectToDb();
-  try {
-    const foundCategory = await Category.findOne({ name: categoryValue });
-    console.log(categoryValue);
-    if (!foundCategory) {
-      return { message: "Add a category to continue" };
-    }
-    const article = await Articles.create({ title, content });
-    foundCategory.articles.push(article);
-    foundCategory.save();
-    return { message: "Article Created Succesfully", status: 201 };
-  } catch (error) {
-    console.log(error);
+
+  if (!category) {
+    return { message: "Add a category to continue" };
   }
-};
-
-export const createCategory = async (name) => {
+  console.log({ title, category });
   try {
-    await connectToDb();
-    const foundCategory = await Category.findOne({ name });
-
-    if (foundCategory) {
-      return {
-        message: `"${name}" has been used Try a different one `,
-        status: 400,
-      };
-    } else {
-      await Category.create({ name, articles: [] });
-
-      return { message: "Category has been Created", status: 200 };
-    }
+    const article = await Articles.create({
+      title,
+      content,
+      category: "format",
+    });
+    console.log(article);
+    return { message: "Article has been Created", status: 201 };
   } catch (error) {
     console.log(error);
   }
@@ -116,9 +88,29 @@ export const createCategory = async (name) => {
 export const getCategory = async () => {
   await connectToDb();
   try {
-    const category = await Category.find({});
+    const article = await Articles.find({});
+    // const foundCategory = article.map(({ category }) => category);
+    // const formattedCateogries = [...new Set(foundCategory)];
+    const response = JSON.parse(JSON.stringify(["formattedCateogries"]));
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    const response = JSON.parse(JSON.stringify(category));
+export const getRelatedPodcasts = async (podcastId) => {
+  await connectToDb();
+  try {
+    const foundArticle = await Articles.findById(podcastId);
+
+    const relatedArticles = await Articles.find({
+      category: foundArticle.category,
+    });
+
+    const filteredArticle = relatedArticles.filter(
+      ({ _id }) => _id == JSON.stringify(foundPodcast._id)
+    );
+    const response = JSON.parse(JSON.stringify(filteredArticle));
     return response;
   } catch (error) {
     console.log(error);

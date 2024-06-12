@@ -5,6 +5,7 @@ import {
   DeletePodcast,
   EditPodcast,
   getEachPodcast,
+  getRelatedPodcasts,
 } from "@/utils/actions/podcastActions";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +16,7 @@ const EachPodcast = () => {
   const [error, setError] = useState("");
 
   const [title, setTitle] = useState("");
+  const [relatedPodcasts, setRaltedPodcats] = useState([]);
   const [description, setDescription] = useState("");
   const [tag, setTag] = useState("");
   const router = useRouter();
@@ -30,14 +32,24 @@ const EachPodcast = () => {
         setError("Failed to fetch podcasts");
       }
     }
+    async function fetchRelatedPodcasts() {
+      try {
+        const res = await getRelatedPodcasts(podcastId);
+        setRaltedPodcats(res);
+      } catch (error) {
+        setError("Failed to fetch podcasts");
+      }
+    }
     fetchpodcasts();
+    fetchRelatedPodcasts();
   }, []);
+  console.log(relatedPodcasts);
   const handleDelete = () => {
     DeletePodcast(podcastId);
     router.push("/podcasts");
   };
   return (
-    <div className="flex max-lg:flex-col gap-[4rem] mt-[4rem] rubik">
+    <div className="flex max-lg:flex-col gap-[4rem] mt-[4rem] serif">
       {error && <p>{error}</p>}
       <div className="flex flex-col  gap-[4rem] max-lg:w-full w-[70%] border-r-2 p-[1rem_2rem]">
         <div className="flex flex-col gap-[2rem] ">

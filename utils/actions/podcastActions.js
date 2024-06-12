@@ -2,14 +2,23 @@
 import { Podcasts } from "@/models/podcasts";
 import { connectToDb } from "../database";
 
-export const getPodcasts = async () => {
+export const getPodcasts = async (category) => {
   console.log("fetching Podcasts");
   await connectToDb();
   try {
-    const podcasts = await Podcasts.find({});
-
-    const response = JSON.parse(JSON.stringify(podcasts));
-    return response;
+    if (category == "All") {
+      const res = await Podcasts.find({});
+      return JSON.parse(JSON.stringify(res.reverse()));
+    } else {
+      const foundCategory = await Podcasts.find({ category });
+      if (!foundCategory) {
+        return {
+          message: `"${category}" wasn't found`,
+          status: 404,
+        };
+      }
+      return JSON.parse(JSON.stringify(foundCategory));
+    }
   } catch (error) {
     console.log(error);
   }
@@ -31,7 +40,7 @@ export const EditPodcast = async (podcastId, title, description, tag) => {
   console.log("Editing this podcast");
   await connectToDb();
   try {
-    const podcast = await Podcasts.findByIdAndUpdate(podcastId, {
+    await Podcasts.findByIdAndUpdate(podcastId, {
       title,
       description,
       tag,
@@ -56,16 +65,53 @@ export const DeletePodcast = async (id) => {
   }
 };
 
-export const createPodcast = async (title, description, tag) => {
+export const createPodcast = async (title, description, tag, categoryValue,image) => {
+  await connectToDb();
+   console.log(image)
+  if (!categoryValue) {
+    return { message: "Add a category to continue" };
+  }
   try {
-    await connectToDb();
-    await Podcasts.create({
-      title,
-      description,
-      tag,
-    });
+    // await Podcasts.create({
+    //   title,
+    //   description,
+    //   tag,
+    //   category: categoryValue,
+    // });
+    // console.log(categoryValue);
+    // return { message: "Podcast has been Created", status: 201 };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    return { message: "Podcast has been Created", status: 201 };
+export const getPodcastCategories = async () => {
+  await connectToDb();
+  try {
+    const podcasts = await Podcasts.find({});
+    const foundCategory = podcasts.map(({ category }) => category);
+    const formattedCateogries = [...new Set(foundCategory)];
+    const response = JSON.parse(JSON.stringify(formattedCateogries));
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getRelatedPodcasts = async (podcastId) => {
+  await connectToDb();
+  try {
+    const foundPodcast = await Podcasts.findById(podcastId);
+
+    const relatedPodcasts = await Podcasts.find({
+      category: foundPodcast.category,
+    });
+    console.log(JSON.stringify(foundPodcast._id));
+    const filteredPodcast = relatedPodcasts.filter(
+      ({ _id }) => _id == JSON.stringify(foundPodcast._id)
+    );
+    const response = JSON.parse(JSON.stringify(filteredPodcast));
+    return response;
   } catch (error) {
     console.log(error);
   }

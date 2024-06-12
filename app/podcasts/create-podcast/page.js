@@ -1,25 +1,51 @@
 "use client";
 
-import { createPodcast } from "@/utils/actions/podcastActions";
+import AddNewPodcast from "@/components/AddNewPodcast";
+import ImageUpload from "@/components/ImageUpload";
+import {
+  createPodcast,
+  getPodcastCategories,
+} from "@/utils/actions/podcastActions";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const CreateNewPodcast = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("");
   const [tag, setTag] = useState("");
   const [audio, setAudio] = useState(null);
   const [message, setMessage] = useState("");
+
+  const [categories, setCategories] = useState([]);
+  const [categoryValue, setCategoryValue] = useState("");
   const router = useRouter();
+  useEffect(() => {
+    async function fetchPodcastCategories() {
+      try {
+        const res = await getPodcastCategories();
+        setCategories(res);
+      } catch (error) {
+        setMessage(error.message);
+      }
+    }
+    fetchPodcastCategories();
+  }, []);
   const handleSubmit = async () => {
     setTitle("");
-    setAudio("");
     setImage("");
     setDescription("");
     setTag("");
     try {
-      const res = await createPodcast(title, description, tag);
+      
+
+      const res = await createPodcast(
+        title,
+        description,
+        tag,
+        categoryValue,
+        imageFile
+      );
       if (res.status === 201) {
         router.push("/podcasts");
       } else {
@@ -36,7 +62,29 @@ const CreateNewPodcast = () => {
           Create Podcast
         </div>
         {message && <p className="text-center text-red-500">{message}</p>}
+        <div className="flex gap-[1rem] justify-between flex-col  pb-[1rem]">
+          <label className="font-[500]">Category </label>
+          <div className="flex justify-between w-full flex-col gap-[1rem] border rounded-md p-[1rem]">
+            <div className="flex gap-[1rem] flex-wrap ">
+              {categories.map((item, index) => (
+                <div
+                  className={`border p-[1rem] rounded-md hover:bg-alt-color transition-all duration-500 cursor-pointer ${
+                    categoryValue == item && "bg-alt-color border-primary-color"
+                  }`}
+                  onClick={() => setCategoryValue(item)}
+                  key={`${index}-${item}`}
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
 
+            <AddNewPodcast
+              setCategories={setCategories}
+              categories={categories}
+            />
+          </div>
+        </div>
         <div className="flex flex-col gap-[2rem]">
           <div className="flex gap-[1rem] justify-between flex-col  pb-[1rem]">
             <label className="font-[500]">Title </label>
@@ -58,15 +106,7 @@ const CreateNewPodcast = () => {
               className="input"
             />
           </div>
-          {/* <div className="flex gap-[1rem] justify-between flex-col  pb-[1rem]">
-            <label className="font-[500]">Image </label>
-            <input
-              value={image}
-              name="image"
-              type={"file"}
-              onChange={(e) => setImage(e.target.value)}
-            />
-          </div> */}
+          <ImageUpload image={image} setImage={setImage} />
           <div className="flex gap-[1rem] justify-between flex-col  pb-[1rem]">
             <label className="font-[500]">Tag </label>
             <input

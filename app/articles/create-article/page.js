@@ -1,113 +1,107 @@
 "use client";
-import AddNew from "@/components/AddNew";
-import { createArticles, getCategory } from "@/utils/actions/articleActions";
-import { useEffect, useState } from "react";
+
+import AddNewArticle from "@/components/AddNewArticle";
+import { createArticle, getCategory } from "@/utils/actions/articleActions";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
 });
 import "react-quill/dist/quill.snow.css";
-
-import { useRouter } from "next/navigation";
-import ImageUpload from "@/components/ImageUpload";
-import dynamic from "next/dynamic";
 const CreateNewArticle = () => {
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [category, setCategory] = useState([]);
-  const [categoryValue, setCategoryValue] = useState("");
-  const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
-  const router = useRouter();
+  const [content, setContent] = useState("");
+  const [message, setMessage] = useState("");
 
+  const [categories, setCategories] = useState([]);
+  const [categoryValue, setCategoryValue] = useState("");
+  const router = useRouter();
   useEffect(() => {
-    async function fetchArticles() {
+    async function fetchArticleCategories() {
       try {
         const res = await getCategory();
-        setCategory(res);
+        setCategories(res);
       } catch (error) {
         setMessage(error.message);
       }
     }
-    fetchArticles();
+    fetchArticleCategories();
   }, []);
-
-  const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // const formData = new FormData();
-    // formData.append("image", image);
-    // formData.append("title", title);
-    // formData.append("content", content);
-    // formData.append("categoryValue", categoryValue);
-
+  const handleSubmit = async () => {
     setTitle("");
     setContent("");
+
     try {
-      const res = await createArticles(title, content, categoryValue);
+      const res = await createArticle(title, content, categoryValue);
       if (res.status === 201) {
         router.push("/articles");
       } else {
         setMessage(res.message);
       }
     } catch (error) {
-      setMessage(error.message);
+      console.log(error);
     }
   };
   return (
     <div className="p-[2rem] w-[50%] max-lg:w-full m-auto serif">
       <form action={handleSubmit}>
-        {" "}
         <div className="text-[1.5rem] text-center mb-[1rem] text-gradient">
           Create Article
         </div>
         {message && <p className="text-center text-red-500">{message}</p>}
+        <div className="flex gap-[1rem] justify-between flex-col  pb-[1rem]">
+          <label className="font-[500]">Category </label>
+          <div className="flex justify-between w-full flex-col gap-[1rem] border rounded-md p-[1rem]">
+            <div className="flex gap-[1rem] flex-wrap ">
+              {categories.map((item, index) => (
+                <div
+                  className={`border p-[1rem] rounded-md hover:bg-alt-color transition-all duration-500 cursor-pointer ${
+                    categoryValue == item && "bg-alt-color border-primary-color"
+                  }`}
+                  onClick={() => setCategoryValue(item)}
+                  key={`${index}-${item}`}
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+
+            <AddNewArticle
+              setCategories={setCategories}
+              categories={categories}
+            />
+          </div>
+        </div>
         <div className="flex flex-col gap-[2rem]">
           <div className="flex gap-[1rem] justify-between flex-col  pb-[1rem]">
-            <label className="font-[500]">Category </label>
-            <div className="flex justify-between w-full max-lg:flex-col gap-[1rem] border rounded-md">
-              <select
-                onChange={(e) => setCategoryValue(e.target.value)}
-                className="section"
-                required
-              >
-                <option>Choose Category</option>
-                {category &&
-                  category.map(({ name, _id }) => (
-                    <option value={name} key={_id}>
-                      {name}{" "}
-                    </option>
-                  ))}
-              </select>
-              <AddNew setCategoryValue={setCategoryValue} />
-            </div>
-          </div>
-
-          <div className="flex gap-[1rem] items-start flex-col  pb-[1rem]">
-            <label className="font-[500]">Title</label>
+            <label className="font-[500]">Title </label>
             <input
               value={title}
               name="title"
               type="text"
-              className="input"
               onChange={(e) => setTitle(e.target.value)}
-              required
+              className="input"
             />
           </div>
-          <div>
-            <ImageUpload
-              handleSubmit={handleSubmit}
-              setImage={setImage}
-              image={image}
+
+          {/* <div className="flex gap-[1rem] justify-between flex-col  pb-[1rem]">
+            <label className="font-[500]">Image </label>
+            <input
+              value={image}
+              name="image"
+              type={"file"}
+              onChange={(e) => setImage(e.target.value)}
             />
-          </div>
-          <div className="flex gap-[1rem] items-start flex-col  pb-[1rem]">
-            <label className="font-[500]">Content</label>
-            <div className="w-full">
-              <ReactQuill value={content} onChange={setContent} />
-            </div>
+          </div> */}
+          <div className="flex gap-[1rem] justify-between flex-col  pb-[1rem]">
+            <label className="font-[500]">Content </label>
+            <ReactQuill value={content} onChange={setContent} />
           </div>
 
           <button type="submit" className="black_btn">
-            Create Now
+            Create Article
           </button>
         </div>
       </form>

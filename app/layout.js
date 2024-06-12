@@ -1,8 +1,8 @@
-import { Bree_Serif, Rubik } from "next/font/google";
+import { Poppins, Rubik } from "next/font/google";
 
 import "./globals.css";
 import Nav from "@/components/Nav";
-const bree_Serif = Bree_Serif({
+const bree_Serif = Poppins({
   subsets: ["latin"],
   weight: ["400"],
   display: "swap",
