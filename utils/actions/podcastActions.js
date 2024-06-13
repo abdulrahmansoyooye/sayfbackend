@@ -46,7 +46,7 @@ export const EditPodcast = async (podcastId, title, description, tag) => {
       tag,
     });
 
-    return { message: "Podcast has Edited", status: 201 };
+    return { message: "Podcast was Edited", status: 201 };
   } catch (error) {
     console.log(error);
   }
@@ -56,30 +56,33 @@ export const DeletePodcast = async (id) => {
   console.log("Deleting this podcast");
   await connectToDb();
   try {
-    const podcast = await Podcasts.findByIdAndDelete(id);
+    await Podcasts.findByIdAndDelete(id);
 
-    const response = JSON.parse(JSON.stringify(podcast));
-    return response;
+    return { message: "Podcast was Edited", status: 201 };
   } catch (error) {
     console.log(error);
   }
 };
 
-export const createPodcast = async (title, description, tag, categoryValue,image) => {
+export const createPodcast = async (
+  title,
+  description,
+  tag,
+  categoryValue,
+  
+) => {
   await connectToDb();
-   console.log(image)
   if (!categoryValue) {
     return { message: "Add a category to continue" };
   }
   try {
-    // await Podcasts.create({
-    //   title,
-    //   description,
-    //   tag,
-    //   category: categoryValue,
-    // });
-    // console.log(categoryValue);
-    // return { message: "Podcast has been Created", status: 201 };
+    await Podcasts.create({
+      title,
+      description,
+      tag,
+      category,
+    });
+    return { message: "Podcast has been Created", status: 201 };
   } catch (error) {
     console.log(error);
   }

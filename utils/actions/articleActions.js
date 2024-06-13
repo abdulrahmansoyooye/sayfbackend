@@ -1,24 +1,19 @@
 "use server";
 
-import { Articles } from "@/models/articles";
+import { sayfArticle } from "@/models/sayfArticle";
 import { connectToDb } from "../database";
 
-export const getArticles = async (category) => {
-  console.log("fetching Articles");
+export const getsayfArticle = async (category) => {
+  console.log("fetching sayfArticle");
   await connectToDb();
   try {
     if (category == "All") {
-      const res = await Articles.find({});
+      const res = await sayfArticle.find({});
       return JSON.parse(JSON.stringify(res.reverse()));
     } else {
-      const foundCategory = await Podcasts.find({ category });
-      if (!foundCategory) {
-        return {
-          message: `"${category}" wasn't found`,
-          status: 404,
-        };
-      }
-      return JSON.parse(JSON.stringify(foundCategory));
+      const foundArticle = await sayfArticle.find({ category });
+
+      return JSON.parse(JSON.stringify(foundArticle));
     }
   } catch (error) {
     console.log(error);
@@ -28,25 +23,25 @@ export const getEachArticle = async (id) => {
   console.log("fetching this Article");
   await connectToDb();
   try {
-    const podcast = await Articles.findById(id);
+    const article = await sayfArticle.findById(id);
 
-    const response = JSON.parse(JSON.stringify(podcast));
+    const response = JSON.parse(JSON.stringify(article));
     return response;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const EditArticle = async (articleId, content, tag) => {
+export const EditArticle = async (articleId, title, content) => {
   console.log("Editing this podcast");
   await connectToDb();
   try {
-    await Articles.findByIdAndUpdate(articleId, {
+    await sayfArticle.findByIdAndUpdate(articleId, {
       title,
       content,
     });
 
-    return { message: "Article has Edited", status: 201 };
+    return { message: "Article was Edited", status: 201 };
   } catch (error) {
     console.log(error);
   }
@@ -56,10 +51,9 @@ export const DeleteArticle = async (id) => {
   console.log("Deleting this podcast");
   await connectToDb();
   try {
-    const article = await Articles.findByIdAndDelete(id);
+    await sayfArticle.findByIdAndDelete(id);
 
-    const response = JSON.parse(JSON.stringify(article));
-    return response;
+    return { message: "Article was deleted", status: 201 };
   } catch (error) {
     console.log(error);
   }
@@ -73,12 +67,12 @@ export const createArticle = async (title, content, category) => {
   }
   console.log({ title, category });
   try {
-    const article = await Articles.create({
+    const article = await sayfArticle.create({
       title,
       content,
-      category: "format",
+      category: category,
     });
-    console.log(article);
+    console.log(category);
     return { message: "Article has been Created", status: 201 };
   } catch (error) {
     console.log(error);
@@ -88,26 +82,26 @@ export const createArticle = async (title, content, category) => {
 export const getCategory = async () => {
   await connectToDb();
   try {
-    const article = await Articles.find({});
-    // const foundCategory = article.map(({ category }) => category);
-    // const formattedCateogries = [...new Set(foundCategory)];
-    const response = JSON.parse(JSON.stringify(["formattedCateogries"]));
+    const article = await sayfArticle.find({});
+    const foundCategory = article.map(({ category }) => category);
+    const formattedCateogries = [...new Set(foundCategory)];
+    const response = JSON.parse(JSON.stringify(formattedCateogries));
     return response;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getRelatedPodcasts = async (podcastId) => {
+export const getRelatedsayfArticle = async (podcastId) => {
   await connectToDb();
   try {
-    const foundArticle = await Articles.findById(podcastId);
+    const foundArticle = await sayfArticle.findById(podcastId);
 
-    const relatedArticles = await Articles.find({
+    const relatedsayfArticle = await sayfArticle.find({
       category: foundArticle.category,
     });
 
-    const filteredArticle = relatedArticles.filter(
+    const filteredArticle = relatedsayfArticle.filter(
       ({ _id }) => _id == JSON.stringify(foundPodcast._id)
     );
     const response = JSON.parse(JSON.stringify(filteredArticle));

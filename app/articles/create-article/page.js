@@ -100,7 +100,7 @@ const CreateNewArticle = () => {
             <ReactQuill value={content} onChange={setContent} />
           </div>
 
-          <button type="submit" className="black_btn">
+          <button type="submit" className="black_btn" >
             Create Article
           </button>
         </div>

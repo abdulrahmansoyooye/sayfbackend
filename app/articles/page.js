@@ -1,7 +1,11 @@
 "use client";
 import ArticlesCard from "@/components/ArticlesCard";
 import Welcome from "@/components/Welcome";
-import { getArticles, getCategory } from "@/utils/actions/articleActions";
+import {
+  getArticles,
+  getCategory,
+  getsayfArticle,
+} from "@/utils/actions/articleActions";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -14,7 +18,7 @@ const Articles = () => {
   useEffect(() => {
     async function fetchArticles() {
       try {
-        const res = await getArticles("All");
+        const res = await getsayfArticle("All");
         setArticles(res);
       } catch (error) {
         setError("Failed to fetch articles");
@@ -34,10 +38,10 @@ const Articles = () => {
 
   const handleCategoryClick = async (name, _id) => {
     setCurrentCategory(name);
-  
+
     setArticles([]);
     try {
-      const res = await getArticles(name);
+      const res = await getsayfArticle(name);
       console.log(articles);
       setArticles(res);
     } catch (error) {

@@ -38,7 +38,7 @@ const Podcasts = () => {
     setpodcasts([]);
     try {
       const res = await getPodcasts(category);
-      // console.log(res);a
+
       setpodcasts(res);
     } catch (error) {
       setError("Failed to fetch Podcasts");

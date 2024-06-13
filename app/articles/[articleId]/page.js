@@ -5,7 +5,6 @@ import {
   getArticles,
   getEachArticle,
 } from "@/utils/actions/articleActions";
-import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
