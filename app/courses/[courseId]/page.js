@@ -21,7 +21,7 @@ const EachCourse = () => {
         setDescription(res.description);
         setTag(res.tag);
       } catch (error) {
-        setError("Failed to fetch courses");
+        setError("Something went wrong. Try Againcourses");
       }
     }
     fetchcourses();

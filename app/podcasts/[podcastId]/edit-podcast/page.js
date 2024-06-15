@@ -22,7 +22,7 @@ const Edit = () => {
         setDescription(res.description);
         setTag(res.tag);
       } catch (error) {
-        setError("Failed to fetch podcasts");
+        setError("Something went wrong. Try Again");
       }
     }
     fetchpodcasts();

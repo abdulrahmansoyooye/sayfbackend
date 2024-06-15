@@ -15,7 +15,7 @@ const Courses = () => {
         console.log(res);
         setCourses(res);
       } catch (error) {
-        setError("Failed to fetch courses");
+        setError("Something went wrong. Try Againcourses");
       }
     }
     fetchcourses();

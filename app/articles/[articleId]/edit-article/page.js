@@ -26,7 +26,7 @@ const Edit = () => {
         setTitle(res.title);
         setContent(res.content);
       } catch (error) {
-        setError("Failed to fetch articles");
+        setError("Something went wrong. Try Againarticles");
       }
     }
     fetchArticles();

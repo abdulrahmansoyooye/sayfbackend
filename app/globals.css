@@ -29,7 +29,7 @@ h1,
   @apply rounded-xl bg-white/10 shadow-[inset_10px_100px_180px_0_rgb(199,199,199,0.2)] backdrop-blur-[1rem]  p-5;
 }
 .text-gradient {
-  @apply bg-gradient-to-r from-[rgb(156,15,72)] via-[#D67D3E] to-[#D67D3E]  bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-[#D67D3E] via-[#D67D3E] to-[#D67D3E]  bg-clip-text text-transparent;
 }
 .text {
   @apply text-primary-color;

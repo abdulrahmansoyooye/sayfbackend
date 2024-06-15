@@ -21,7 +21,7 @@ const Articles = () => {
         const res = await getsayfArticle("All");
         setArticles(res);
       } catch (error) {
-        setError("Failed to fetch articles");
+        setError("Something went wrong. Try Againarticles");
       }
     }
     async function fetchCatrogries() {
@@ -29,7 +29,7 @@ const Articles = () => {
         const res = await getCategory();
         setCategories(res);
       } catch (error) {
-        setError("Failed to fetch articles");
+        setError("Something went wrong. Try Againarticles");
       }
     }
     fetchCatrogries();
@@ -45,7 +45,7 @@ const Articles = () => {
       console.log(articles);
       setArticles(res);
     } catch (error) {
-      setError("Failed to fetch articles");
+      setError("Something went wrong. Try Againarticles");
     }
   };
   return (

@@ -19,7 +19,7 @@ const Podcasts = () => {
         const res = await getPodcasts("All");
         setpodcasts(res);
       } catch (error) {
-        setError("Failed to fetch podcasts");
+        setError("Something went wrong. Try Againpodcasts");
       }
     }
     async function fetchPodcastCategories() {
@@ -41,7 +41,7 @@ const Podcasts = () => {
 
       setpodcasts(res);
     } catch (error) {
-      setError("Failed to fetch Podcasts");
+      setError("Something went wrong. Try AgainPodcasts");
     }
   };
   return (
