@@ -37,14 +37,12 @@ const CreateNewPodcast = () => {
     setDescription("");
     setTag("");
     try {
-      
-
       const res = await createPodcast(
         title,
         description,
         tag,
         categoryValue,
-        imageFile
+        
       );
       if (res.status === 201) {
         router.push("/podcasts");
@@ -106,7 +104,7 @@ const CreateNewPodcast = () => {
               className="input"
             />
           </div>
-          <ImageUpload image={image} setImage={setImage} />
+          {/* <ImageUpload image={image} setImage={setImage} /> */}
           <div className="flex gap-[1rem] justify-between flex-col  pb-[1rem]">
             <label className="font-[500]">Tag </label>
             <input

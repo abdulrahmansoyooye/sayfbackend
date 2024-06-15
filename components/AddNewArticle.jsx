@@ -9,10 +9,7 @@ const AddNewArticle = ({ setCategories, categories }) => {
     setIsToggle(!istoggle);
   };
   const handleSubmit = () => {
-    setCategories([
-      ...categories.filter((item) => !item.includes(value)),
-      value,
-    ]);
+    setCategories([...categories.filter((item) => item !== value), value]);
     setIsToggle(false);
   };
   return (

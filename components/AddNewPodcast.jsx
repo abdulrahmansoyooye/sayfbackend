@@ -5,16 +5,13 @@ import React, { useState } from "react";
 const AddNewPodcast = ({ setCategories, categories }) => {
   const [value, setValue] = useState("");
   const [istoggle, setIsToggle] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const handleClick = () => {
     setIsToggle(!istoggle);
   };
   const handleSubmit = () => {
-    setCategories([
-      ...categories.filter((item) => !item.includes(value)),
-      value,
-    ]);
+    setCategories([...categories.filter((item) => item !== value), value]);
+
     setIsToggle(false);
   };
   return (

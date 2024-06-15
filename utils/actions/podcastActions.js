@@ -64,13 +64,7 @@ export const DeletePodcast = async (id) => {
   }
 };
 
-export const createPodcast = async (
-  title,
-  description,
-  tag,
-  categoryValue,
-  
-) => {
+export const createPodcast = async (title, description, tag, categoryValue) => {
   await connectToDb();
   if (!categoryValue) {
     return { message: "Add a category to continue" };
@@ -80,7 +74,7 @@ export const createPodcast = async (
       title,
       description,
       tag,
-      category,
+      category: categoryValue,
     });
     return { message: "Podcast has been Created", status: 201 };
   } catch (error) {
