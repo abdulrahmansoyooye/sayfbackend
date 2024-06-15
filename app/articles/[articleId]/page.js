@@ -23,7 +23,7 @@ const EachArticle = () => {
         setTitle(res.title);
         setContent(res.content);
       } catch (error) {
-        setError("Something went wrong. Try Againarticles");
+        setError("Something went wrong. Try Again");
       }
     }
     fetchArticles();
@@ -61,9 +61,9 @@ const EachArticle = () => {
             className="border border-red-600 p-[1rem] cursor-pointer flex gap-[1rem] justify-center items-center rounded-md  w-[150px] h-[60px] max-lg:w-full hover:scale-[1.2] transition-all duration-500"
           >
             <Image
-              src={"/assets/delete1.png"}
-              width={40}
-              height={40}
+              src={"/assets/delete.png"}
+              width={20}
+              height={20}
               alt="delete"
               className="object-contain "
             />

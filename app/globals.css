@@ -8,6 +8,9 @@
   --text-color: #111111;
   --alt-color: #f6f6f6;
 }
+body {
+  font-family: var(--font-rubik);
+}
 .nav {
   background-color: var(--alt-color);
   width: 100%;

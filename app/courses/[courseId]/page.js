@@ -21,7 +21,7 @@ const EachCourse = () => {
         setDescription(res.description);
         setTag(res.tag);
       } catch (error) {
-        setError("Something went wrong. Try Againcourses");
+        setError("Something went wrong. Try Again");
       }
     }
     fetchcourses();
@@ -57,9 +57,9 @@ const EachCourse = () => {
             onClick={handleDelete}
           >
             <Image
-              src={"/assets/delete1.png"}
-              width={40}
-              height={40}
+              src={"/assets/delete.png"}
+              width={20}
+              height={20}
               alt="delete"
               className="object-contain "
             />
